@@ -273,3 +273,50 @@ Corregido con reglas por `id` (`#adv-pop`, `#fg-pop`), que ganan a cualquier otr
 - **casillas** → ancho propio, sin mínimo, sin estirarse
 - **texto** → ancho completo pero sin mínimo forzado
 - más un `min-width:0` general para cualquier campo que se añada en el futuro
+
+---
+
+# Reconciliación con la rama `arreglos-catalogo-cruce-ventas`
+
+Esa rama tenía **siete commits del 18 de agosto** que nunca llegaron a `main`, porque el
+trabajo del 19 arrancó desde `082a750` sin hacer `git fetch` antes. Resultado: se
+reconstruyeron de otra forma cosas que ya estaban hechas (filtros guardados, botón por
+referencia, tallas ocultas al filtrar).
+
+Se decidió conservar `main` como base y traer las tres cosas que solo existían en la rama.
+
+## 19. «Más stock» y «Menos stock» vuelven, ahora ordenando de verdad
+
+En el punto 9 se eliminaron por no hacer lo que prometían. La rama los había **arreglado**
+en vez de quitarlos, y esa solución es mejor:
+
+- `reorderCards()` reordena las tarjetas **dentro de su propia familia**, moviéndolas en el
+  DOM. Antes `showOnly()` solo cambiaba qué se veía y por eso la cuadrícula quedaba igual.
+- **No tocan la selección.** Ordenar la vista y elegir polos para el collage son cosas
+  distintas; antes el botón hacía las dos y se llevaba por delante lo que tuvieras marcado.
+- Se guarda el orden original de cada rejilla al cargar, y **Limpiar lo devuelve**.
+
+## 20. Descargar una foto suelta
+
+Botón **⬇** en la esquina de cada tarjeta con imagen. Baja esa foto sola, sin pasar por el
+collage, y **con la misma etiqueta de nombre y talla** que llevan las del collage: si hay
+tallas filtradas marca solo esas, si no, todas. El archivo sale como
+`B4MLRMOSTAZA_talla_S-M.png`. Las tarjetas sin foto no lo muestran.
+
+## 21. Filtros guardados editables y renombrables
+
+Botón **✎** en cada filtro propio. Carga sus valores en el formulario para retocarlo; el
+botón cambia a **✓ Guardar cambios**. Si le pones otro nombre, **se renombra** en vez de
+crear uno nuevo, porque se identifica por su `id` y no por el nombre. Si el filtro que
+editas es el que tienes aplicado, la vista se recalcula al guardar.
+
+Los filtros del catálogo (punto 17) no tienen ✎ ni ✕: vienen en el archivo y se cambian
+editando `FILTROS_BASE`.
+
+### Comprobaciones
+
+- Los tres bloques de JavaScript compilan.
+- Las 70 pruebas siguen pasando (26 del filtro guardado, 22 de tallas múltiples, 22 del
+  saneado de importación).
+- Datos intactos: 252 registros SKU, 1.884 unidades, 1.637 antigua / 247 nueva.
+- Sin verificación visual.
