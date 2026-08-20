@@ -320,3 +320,46 @@ editando `FILTROS_BASE`.
   saneado de importación).
 - Datos intactos: 252 registros SKU, 1.884 unidades, 1.637 antigua / 247 nueva.
 - Sin verificación visual.
+
+---
+
+# Reconciliación con `arreglos-catalogo-cruce-ventas` — 20 de agosto de 2026
+
+La rama siguió trabajando por su lado sobre el diseño viejo de filtros (antes del punto 8)
+mientras `main` recibía la barra unificada. Se fusionó `main` dentro de la rama para que el
+diseño aprobado (barra unificada, "Mis filtros") se quede con las mejoras del cruce de
+ventas que solo existían en la rama.
+
+## 22. Cruce de ventas: solo cuenta las salidas (negativos)
+
+El reporte real de la empresa es un export de stock ("Stock total empresa"), no un listado
+de ventas: los negativos son las unidades que salieron. La columna de cantidad ahora solo
+reconoce valores **negativos** (se toma el valor absoluto); positivos, cero, vacíos o texto
+se ignoran.
+
+## 23. Detección de columnas fija por nombre de cabecera
+
+Si el reporte trae exactamente las cabeceras **"Referencia"** y **"Stock total empresa"**,
+se usan esas columnas directamente (ya no por puntaje, que podía confundir la columna ID
+con la de cantidad) y se procesa solo con subir el archivo, sin tocar ningún filtro.
+
+## 24. Pantalla de resumen al aplicar el descuento
+
+En vez de una alerta bloqueante del navegador, "Aplicar" abre una ventana en primer plano
+con la tarjeta real (foto incluida) de cada prenda modificada y, debajo, la talla vendida
+con su stock antes/después; igual para la tela consumida por faltantes.
+
+### Qué se descartó de la rama por quedar redundante con `main`
+
+- El panel viejo de "Filtros guardados" (cajas de texto con nombre/talla/categoría) —
+  reemplazado por el punto 10/17 de `main` (más completo: filtros del catálogo + propios,
+  identificados por `id` en vez de posición).
+- El botón "Seleccionar referencia" por familia — reemplazado por el punto 14 de `main`
+  ("Seleccionar estos"), misma idea ya resuelta ahí.
+
+### Comprobaciones
+
+- Los tres bloques de JavaScript compilan.
+- Probado en navegador: detección automática de columnas, cruce con datos reales del
+  catálogo, ventana de resumen tras aplicar (prendas y tela), "Mis filtros" con los 5
+  filtros del catálogo intactos.
